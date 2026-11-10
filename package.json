@@ -1,0 +1,16 @@
+{
+  "name": "flop-devnet-agent",
+  "version": "0.1.0",
+  "description": "Use a Technocore did:key identity as an agent account on the FLOP devnet: fund, enroll, run inference, read the receipt.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "bin": { "flop-agent": "src/cli.js" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@noble/curves": "2.4.0",
+    "@noble/hashes": "2.4.0"
+  }
+}

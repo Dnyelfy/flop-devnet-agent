@@ -1,0 +1,5 @@
+node_modules/
+# identity and credential files must never be committed
+*identity*.json
+*credential*.json
+.flop-devnet-agent/
