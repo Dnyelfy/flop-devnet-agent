@@ -53,14 +53,19 @@ Add `--json` to any command for machine-readable output.
 
 ## What was verified, and what was not
 
-Checked on 2026-11-10 against the live devnet with a throwaway key:
+Checked on 2026-11-10 and 2026-11-11 against the live devnet with a throwaway key:
 
 - `status`, `balance` and `fund` work end to end; the faucet grant arrived and finalized.
-- The gateway **accepts an Ed25519 `did:key` signature** for enrollment: a wrong
-  signature is refused with `401 invalid_signature`, the real one passes that check.
-- `enroll` then stopped at `503 wallet_enrollment_cap_reached`, the gateway's own daily
-  limit. So `enroll`, `key`, `chat` and `receipt` are **not yet exercised against the live
-  gateway**; their request shapes follow the official CLI and are covered by unit tests.
+- `enroll` works with an **Ed25519 `did:key` account**: the gateway issued a key scoped to
+  `qwen/qwen2.5-0.5b-instruct` with a quota of 20,000 and a 24-hour expiry. A wrong
+  signature is refused with `401 invalid_signature`. The gateway has a daily enrollment
+  cap; when it is full, `enroll` returns `503 wallet_enrollment_cap_reached` and can only
+  be retried later.
+- `key` works and reports the quota and expiry.
+- `chat` reached the gateway with the issued key but was refused twice with
+  `429 overloaded`; the quota stayed at 20,000, so nothing was charged. A completed
+  inference and a `receipt` for it are therefore **not yet verified live**; their request
+  shapes follow the official CLI and are covered by unit tests.
 
 The identity code is checked against two references: the DID equals the one
 technocore-did-kit derives from the same seed, and the address and signature equal what
