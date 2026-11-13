@@ -62,10 +62,12 @@ Checked on 2026-11-10 and 2026-11-11 against the live devnet with a throwaway ke
   cap; when it is full, `enroll` returns `503 wallet_enrollment_cap_reached` and can only
   be retried later.
 - `key` works and reports the quota and expiry.
-- `chat` reached the gateway with the issued key but was refused twice with
-  `429 overloaded`; the quota stayed at 20,000, so nothing was charged. A completed
-  inference and a `receipt` for it are therefore **not yet verified live**; their request
-  shapes follow the official CLI and are covered by unit tests.
+- `chat` is accepted by the gateway: on 2026-11-13 a request was admitted and 0.096 of
+  the quota was reserved for it, but the response did not arrive within 120 seconds.
+  Earlier attempts were refused with `429 overloaded` and charged nothing.
+- `receipt` works: it returned that request in state `reserved` (quota held, no
+  completion recorded, nothing settled).
+- A **completed answer and a settled receipt are not yet verified live.**
 
 The identity code is checked against two references: the DID equals the one
 technocore-did-kit derives from the same seed, and the address and signature equal what

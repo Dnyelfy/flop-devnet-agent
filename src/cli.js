@@ -180,10 +180,9 @@ const commands = {
         model, messages: [{ role: 'user', content: prompt }], max_tokens: maxTokens,
       });
     } catch (error) {
-      if (!(error instanceof gw.HttpError)) {
-        error.message += `\nThe outcome of request ${requestId} is unknown. Do not resend it; run "flop-agent receipt ${requestId}".`;
-      }
-      throw error;
+      if (error instanceof gw.HttpError) throw error;
+      // A timeout or a dropped connection does not show that no work was done.
+      throw new Error(`${error.message}\nThe outcome of request ${requestId} is unknown. Do not resend it; run "flop-agent receipt ${requestId}".`, { cause: error });
     }
     const answer = completion.choices?.[0]?.message?.content ?? '';
     let rcpt = null;
